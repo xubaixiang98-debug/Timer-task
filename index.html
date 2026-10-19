@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#121521">
+  <meta name="description" content="個人自用的計時任務與本機媒體素材 PWA">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <title>任務計時器</title>
+</head>
+<body>
+  <header class="topbar">
+    <div><p class="eyebrow">PERSONAL TIMER STUDIO</p><h1>任務計時器</h1></div>
+    <button id="installBtn" class="secondary hidden" type="button">安裝 App</button>
+  </header>
+
+  <main>
+    <nav class="tabs" aria-label="主要頁面">
+      <button class="tab active" data-tab="run">執行</button>
+      <button class="tab" data-tab="setup">設定</button>
+      <button class="tab" data-tab="library">素材庫</button>
+      <button class="tab" data-tab="history">紀錄</button>
+    </nav>
+
+    <section id="tab-run" class="panel">
+      <div class="run-head">
+        <div><span class="muted">目前預設</span><h2 id="activePresetName">快速開始</h2></div>
+        <span id="statusPill" class="pill">尚未開始</span>
+      </div>
+      <div class="timer-card">
+        <div class="timer-caption">剩餘時間</div>
+        <div id="timerDisplay" class="timer">05:00</div>
+        <div class="progress"><div id="progressBar"></div></div>
+        <div class="timer-meta"><span id="stepLabel">準備就緒</span><span id="stepClock">—</span></div>
+      </div>
+      <div class="prompt-card">
+        <div class="prompt-top"><span class="eyebrow">CURRENT TASK</span><span id="difficultyBadge" class="pill">普通</span></div>
+        <h2 id="wordDisplay">準備好了嗎？</h2>
+        <p id="taskDisplay">到「設定」建立任務，或直接開始預設計時。</p>
+        <div id="mediaStage" class="media-stage"><div class="media-placeholder">選擇素材集後，圖片或影片會顯示在這裡。</div></div>
+      </div>
+      <div class="controls">
+        <button id="startBtn" class="primary">開始</button>
+        <button id="pauseBtn" class="secondary" disabled>暫停</button>
+        <button id="nextBtn" class="secondary" disabled>下一項</button>
+        <button id="stopBtn" class="danger" disabled>結束</button>
+      </div>
+      <p class="hint">螢幕鎖定或切到背景時，瀏覽器可能限制計時精度。建議執行期間保持頁面開啟。</p>
+    </section>
+
+    <section id="tab-setup" class="panel hidden">
+      <div class="section-title"><div><p class="eyebrow">CONFIGURATION</p><h2>任務與計時設定</h2></div></div>
+      <form id="configForm" class="form-grid">
+        <label>預設名稱<input id="presetName" maxlength="60" value="我的預設" required></label>
+        <label>難度
+          <select id="difficulty"><option>簡單</option><option selected>普通</option><option>困難</option><option>自訂</option></select>
+        </label>
+        <label>總時間（分鐘）<input id="totalMinutes" type="number" min="0.1" max="1440" step="0.1" value="5" required></label>
+        <label>每項顯示時間（秒）<input id="itemSeconds" type="number" min="1" max="3600" step="1" value="30" required></label>
+        <label>切換方式
+          <select id="orderMode"><option value="sequential">依序播放</option><option value="random">隨機播放</option></select>
+        </label>
+        <label>素材集
+          <select id="collectionSelect"><option value="">不使用媒體</option></select>
+        </label>
+        <label class="full">字詞（每行一項）<textarea id="wordsInput" rows="4" placeholder="例如：專注&#10;觀察&#10;回想"></textarea></label>
+        <label class="full">任務／要求（每行一項）<textarea id="tasksInput" rows="4" placeholder="例如：閱讀並思考&#10;描述你看到的內容"></textarea></label>
+        <label class="full">備註（選填）<textarea id="notesInput" rows="2" placeholder="這組設定的用途"></textarea></label>
+        <div class="full form-actions">
+          <button class="primary" type="submit">套用設定</button>
+          <button id="savePresetBtn" class="secondary" type="button">儲存為預設</button>
+          <button id="resetFormBtn" class="secondary" type="button">重設表單</button>
+        </div>
+      </form>
+      <div class="subsection"><h3>已儲存的預設</h3><div id="presetList" class="stack"></div></div>
+    </section>
+
+    <section id="tab-library" class="panel hidden">
+      <div class="section-title"><div><p class="eyebrow">LOCAL MEDIA</p><h2>素材庫</h2><p class="muted">檔案只保存在這個瀏覽器的本機資料庫，不會上傳。</p></div></div>
+      <form id="collectionForm" class="inline-form">
+        <label class="grow">素材集名稱<input id="collectionName" maxlength="60" placeholder="例如：第一組素材" required></label>
+        <button class="primary" type="submit">建立素材集</button>
+      </form>
+      <div class="upload-card">
+        <label class="file-picker">選擇圖片／影片<input id="mediaFiles" type="file" accept="image/*,video/*" multiple></label>
+        <p class="hint">可多選圖片與影片。大型影片會佔用瀏覽器儲存空間；請保留原始檔備份。</p>
+      </div>
+      <div id="collectionList" class="stack"></div>
+    </section>
+
+    <section id="tab-history" class="panel hidden">
+      <div class="section-title"><div><p class="eyebrow">SESSION LOG</p><h2>執行紀錄</h2></div><button id="exportHistoryBtn" class="secondary">匯出 JSON</button></div>
+      <div id="historyList" class="stack"></div>
+      <button id="clearHistoryBtn" class="danger-outline">清除所有紀錄</button>
+    </section>
+  </main>
+  <footer>個人使用 · 資料儲存在此裝置的瀏覽器</footer>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "任務計時器",
+  "short_name": "任務計時",
+  "description": "個人自用的計時任務與本機媒體素材 PWA",
+  "lang": "zh-Hant",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f1119",
+  "theme_color": "#121521",
+  "icons": [{"src":"./icons/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
