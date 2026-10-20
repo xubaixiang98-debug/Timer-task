@@ -57,6 +57,8 @@
         <label>難度
           <select id="difficulty"><option>簡單</option><option selected>普通</option><option>困難</option><option>自訂</option></select>
         </label>
+        <label>時間長度<select id="timeMode"><option value="ultra">超短（1～5 分鐘）</option><option value="short">短（5～15 分鐘）</option><option value="normal" selected>普通（15～30 分鐘）</option><option value="long">長（30～45 分鐘）</option><option value="extraLong">超長（45～60 分鐘）</option><option value="custom">自定義（1～180 分鐘）</option></select></label>
+        <label>自定義區間起點（分鐘；僅自定義模式使用）<input id="totalMinutes" type="number" min="1" max="180" step="1" value="15" required></label>
         <label>總時間（分鐘）<input id="totalMinutes" type="number" min="0.1" max="1440" step="0.1" value="5" required></label>
         <label>時間模式<select id="timeMode"><option value="fixed">固定時間</option><option value="custom">自定義區間</option><option value="random">隨機時間</option></select></label><label>自定義時間起點（分鐘）<input id="customMinMinutes" type="number" min="1" max="180" step="1" value="1" required></label><label>自定義時間終點（分鐘）<input id="customMaxMinutes" type="number" min="1" max="180" step="1" value="10" required></label>
         <label>每項顯示時間（秒）<input id="itemSeconds" type="number" min="1" max="3600" step="1" value="30" required></label>
